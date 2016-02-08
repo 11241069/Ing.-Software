@@ -20,28 +20,75 @@ protected void Page_Load(object sender, EventArgs e)
         <div>
             <form>
                 <table border="0">
-                    <tr>
-                        <td class="name">Volumen:</td>
+				
+					<tr>
+                        <td class="name">Volumen del tanque:</td>
                         <td>
-                            <input onChange="heat()" type="text" size="6" value="20" id="volumen" />
-                            <select onChange="heat()" id="unidadesVol">
+                            <input type="text" size="6" value="20" id="volumenTanque" />
+                            <select id="unidadesVolTanque">
+                                <option selected="selected" value="litros">litros</option>
+                                <option value="galones">galones</option>
+                            </select>
+                        </td>
+                    </tr>				
+				
+                    <tr>
+                        <td class="name">Volumen de agua:</td>
+                        <td>
+                            <input type="text" size="6" value="20" id="volumen" />
+                            <select id="unidadesVol">
                                 <option selected="selected" value="litros">litros</option>
                                 <option value="galones">galones</option>
                             </select>
                         </td>
                     </tr>
+					
+					<tr>
+                        <td class="name">Temperatura agua entra:</td>
+                        <td>
+                            <input type="text" size="6" value="15" id="tempEntra" />
+                            <select  id="unidadesTEntra">
+                                <option selected="selected" value="C">&deg;C</option>
+                                <option value="F">&deg;F</option>
+                            </select>
+                        </td>
+                    </tr>
+					
+					<tr>
+                        <td class="name">Tasa de entrada de agua:</td>
+                        <td>
+                            <input type="text" size="6" value="20" id="tasaEntrada" />
+                            <select id="unidadesTasaEntrada">
+                                <option selected="selected" value="litros">lit/s</option>
+                                <option value="galones">gal/s</option>
+                            </select>
+                        </td>
+                    </tr>				
+				
+                    <tr>
+                        <td class="name">Tasa de salida de agua:</td>
+                        <td>
+                            <input type="text" size="6" value="20" id="tasaSalida" />
+                            <select id="unidadesTasaSalida">
+                                <option selected="selected" value="litros">lit/s</option>
+                                <option value="galones">gal/s</option>
+                            </select>
+                        </td>
+                    </tr>
+					
+					
                     <tr>
                         <td class="name">Energia:</td>
                         <td>
-                            <input onChange="heat()" type="text" size="6" value="3000" id="energia" />
+                            <input type="text" size="6" value="3000" id="energia" />
                             watts
                         </td>
                     </tr>
                     <tr>
                         <td class="name">Temperatura incial:</td>
                         <td>
-                            <input onChange="heat()" type="text" size="6" value="15" id="startTemp" />
-                            <select onChange="heat()" id="unidadesTIni">
+                            <input type="text" size="6" value="15" id="startTemp" />
+                            <select  id="unidadesTIni">
                                 <option selected="selected" value="C">&deg;C</option>
                                 <option value="F">&deg;F</option>
                             </select>
@@ -50,8 +97,8 @@ protected void Page_Load(object sender, EventArgs e)
                     <tr>
                         <td class="name">Temperatura final:</td>
                         <td>
-                            <input onChange="heat()" type="text" size="6" value="80" id="endTemp" />
-                            <select onChange="heat()" id="unidadesTFin">
+                            <input type="text" size="6" value="80" id="endTemp" />
+                            <select id="unidadesTFin">
                                 <option selected="selected" value="C">&deg;C</option>
                                 <option value="F">&deg;F</option>
                             </select>
@@ -61,7 +108,7 @@ protected void Page_Load(object sender, EventArgs e)
                     <tr>
                         <td class="name">Eficiencia:</td>
                         <td>
-                            <input onChange="heat()" type="text" size="6" value="95" id="eficiencia" />%
+                            <input type="text" size="6" value="95" id="eficiencia" />%
                         </td>
                     </tr>
                     <tr>
@@ -73,9 +120,44 @@ protected void Page_Load(object sender, EventArgs e)
                     </tr>
                 </table>
 				
-				<input type = "button" id="btnAceptar" value="Calcular" onclick="heat();" />
+				<input type = "button" id="btnCalcular" value="Calcular" onclick="heat();" />
+				<br>
+				<input type = "button" id="btnDetener" value="Detener simulación" onclick="detener();" />
             </form>
         </div>
+		<br>
+		<br>
 		
+		<div>
+				<table>
+					<tr>
+						<td class="name">Tiempo transcurrido:</td>
+						<td>
+						<div id = "tiempoTranscurrido"></div>
+						</td>
+					</tr>
+						
+					<tr>
+						<td class="name">Temperatura actual:</td>
+						<td>
+						<div id="temperaturaActual"></div>&deg;C
+						</td>
+					</tr>
+					
+					<tr>
+						<td class="name">Volumen actual de agua:</td>
+						<td>
+						<div id="volumenActual"></div>L
+						</td>
+					</tr>
+					
+					<tr>
+						<td class="name">Estado del calentador:</td>
+						<td>
+						<div id="estado"></div>
+						</td>
+					</tr>
+				</table>
+		</div>
     </body>
 </html>

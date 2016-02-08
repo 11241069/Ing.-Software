@@ -5,6 +5,27 @@
 //observaciones:
 //es probable que sea necesario separar esta función en más partes en el futuro
 
+//variables para hacer actualizaciones relevantes
+var tTrans = 0;
+var tTot = 0;
+var calcularId = 0;
+var tempAct = 0.0;
+var tempIni = 0.0;
+var tempFin = 0.0;
+var volumenMax = 0;
+var volumenActual = 0;
+var tempEntra = 0;
+var tasaEntrada = 0;
+var tasaSalida = 0;
+
+//estados posibles del calentador - ver function estado()
+var calentando = false;
+var enfriando = false;
+var entraAgua = false;
+var saleAgua = false;
+//override para detener la simulación - se vuelve true cuando se alcanza la temperatura deseada
+var stop = false;
+
 var heat = function () {
                 // es más fácil recalcular estos cuando se cambian
                 var volumen = document.getElementById('volumen');//volumen por calentar
@@ -13,7 +34,13 @@ var heat = function () {
                 var endTemp = document.getElementById('endTemp').value;//temperatura final deseada
                 var eficiencia = document.getElementById('eficiencia').value;//eficiencia; los calentadores no son 100% eficientes y podríamos valernos de
 																			 //esta misma eficiencia para los cálculos de pérdida por la forma y material del contenedor
-																			 
+				
+				volumenMax = document.getElementById('volumenTanque').value;//volumen máximo del tanque
+				volumenActual = volumen.value;
+				tasaEntrada = document.getElementById('tasaEntrada').value;//tasa de entrada de agua
+				tasaSalida = document.getElementById('tasaSalida').value;//tasa de salida de agua
+				tempEntra = document.getElementById('tempEntra').value;//tasa de salida de agua
+				
 				if (isNaN(volumen.value) || volumen.value < 0) {
                     volumen.value = 0;
                     alert('El volumen debe ser >= 0');
@@ -62,14 +89,131 @@ var heat = function () {
                 var startTempInF = (unidadesTIni == 'C') ? startTemp.value * 1.8 + 32 : startTemp.value;
                 var endTempInF = (unidadesTFin == 'C') ? endTemp * 1.8 + 32 : endTemp;
                 
-                if (startTempInF > endTempInF) {//hay que modificar esto después, el calentador también pude enfriar según especificaciones del ing.
-                    startTemp.value = 40;
-                    endTemp.value = 100;
-                    alert('Temperatura inicial no puede ser mayor que Temperatura final');
-                }
+				estado(-666);
+                if (startTempInF < endTempInF) {                    
+					estado(1);
+                }else{//hay que modificar esto después, el calentador también pude enfriar según especificaciones del ing.
+					//startTemp.value = 40;
+                    //endTemp.value = 100;
+					estado(2);
+                    //alert('Temperatura inicial no puede ser mayor que Temperatura final');					
+				}
                 
                 var tiempo = document.getElementById('tiempo');
                 // forumla basada en galones/watts/Farenheit
-                tiempo.value = Math.round(100 * ((volumenGal*8.33*453.59237)*(((5/9)*(endTempInF-32))-((5/9)*(startTempInF-32)))/(enerWatts*0.238845896628*eficiencia)));
+                tiempo.value = tTot = Math.abs(Math.round(100 * ((volumenGal*8.33*453.59237)*(((5/9)*(endTempInF-32))-((5/9)*(startTempInF-32)))/(enerWatts*0.238845896628*eficiencia))));
+				tempAct = tempIni = startTemp.value;
+				tempFin = endTemp;
+				calcularId = setInterval(calculate, 1000);
 				
+				
+}
+
+function calculate(){		
+	updateTiempo();
+	updateTemperatura();
+	updateEstado();
+}
+
+function detener(){
+	clearInterval(calcularId);
+	tTrans = 0;
+	tempAct = 0;
+	document.getElementById('temperaturaActual').innerHTML = tempAct;
+	document.getElementById('tiempoTranscurrido').innerHTML = tTrans;
+	document.getElementById('estado').innerHTML = "";
+}
+
+function updateTiempo(){
+	if(tTrans <= tTot-1){
+			tTrans++;
+	}
+	document.getElementById('tiempoTranscurrido').innerHTML = tTrans;
+		
+}
+
+function updateTemperatura(){
+	if(calentando){
+		if(tempAct<=tempFin){
+			var temp = Math.abs(tempFin-tempIni)*1.0/(tTot);
+			(tempAct) = (tempAct*1 + temp);
+		}else{
+			estado(666);
+			estado(-1);
+		}
+	}else if (enfriando){
+		if(tempAct>=tempFin){
+			//var temp = Math.abs(tempFin-tempIni)*1.0/(tTot);
+			//(tempAct) = (tempAct*1 - temp);
+			estado(3);
+			if(volumenActual<=volumenMax-tasaEntrada){
+				(tempAct) -= ((volumenActual*tempAct)+(volumenActual+tasaEntrada*tempEntra))/(volumenActual+(volumenActual+tasaEntrada));
+				(volumenActual) = (volumenActual*1 + tasaEntrada*1);
+			}else{
+				estado(4);
+				(volumenActual) = (volumenActual*1 - tasaSalida*1);
+			}
+			
+		}else{
+			estado(1);
+			estado(-2);
+			estado(-3);
+			estado(-4);
+		}
+	}
+	document.getElementById('temperaturaActual').innerHTML = (tempAct).toFixed(4);
+}
+
+function estado(state){//también conocido como peaceful mongoose, o el megavisor :)
+	switch(state) {
+    case (1):
+        calentando = true;
+        break;
+    case (2):
+        enfriando = true;
+        break;
+	case (3):
+        entraAgua = true;
+        break;
+	case (4):
+        saleAgua = true;
+        break;
+	case (666):
+		stop = true;
+	case (-1):
+        calentando = false;
+        break;
+    case (-2):
+        enfriando = false;
+        break;
+	case (-3):
+        entraAgua = false;
+        break;
+	case (-4):
+        saleAgua = false;
+        break;
+	case (-666):
+		stop = false;
+    default:
+		break;
+	}	
+}
+
+function updateEstado(){
+	if(stop)
+		clearInterval(calcularId);
+	
+	var myEstado = "";
+	if(calentando)
+		myEstado += "El calentador está calentando. ";
+	if(enfriando)
+		myEstado += "El calentador está enfriando. ";
+	if(entraAgua)
+		myEstado += "El calentador está dejando entrar agua. ";
+	if(saleAgua)
+		myEstado += "El calentador está dejando salir agua. ";
+	
+	document.getElementById('estado').innerHTML = myEstado;
+	document.getElementById('volumenActual').innerHTML = volumenActual;
+	
 }
