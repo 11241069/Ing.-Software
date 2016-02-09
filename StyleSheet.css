@@ -1,0 +1,48 @@
+﻿@font-face {
+    font-family: Simple;
+    src: url(Mate-Regular.ttf);
+}
+body {
+    background:#fbfbfb;
+    margin:0;
+    /*font-family:Simple;*/
+}
+* {
+    font-family:Simple;
+}
+.header{
+    box-shadow: 0px 0px 3px 2px rgba(169, 176, 184, 0.75);
+    height: 60px;
+    margin-bottom: 20px;
+    text-align: center;
+    background: white;
+}
+h1{
+    top:10px;
+    position:relative;
+}
+.container{
+    position: relative;
+    z-index: 2;
+    margin: 0 auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    width: 80%;
+    box-shadow: 0px 0px 3px 2px rgba(169, 176, 184, 0.75);
+    background-color: white;
+    padding: 30px;
+}
+.input-container{
+    padding:10px;
+}
+input[type=button] {
+  -webkit-box-shadow: 0px 1px 3px #666666;
+  -moz-box-shadow: 0px 1px 3px #666666;
+  box-shadow: 0px 1px 3px #666666;
+  padding: 6px 20px 8px 20px;
+  text-decoration: none;
+}
+
+input[type=button]:hover {
+  text-decoration: none;
+}
