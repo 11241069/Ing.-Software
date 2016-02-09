@@ -33,16 +33,11 @@ h1{
     padding: 30px;
 }
 .input-container{
-    padding:10px;
+    padding:10px 0px;
 }
 input[type=button] {
-  -webkit-box-shadow: 0px 1px 3px #666666;
+  /*-webkit-box-shadow: 0px 1px 3px #666666;
   -moz-box-shadow: 0px 1px 3px #666666;
-  box-shadow: 0px 1px 3px #666666;
-  padding: 6px 20px 8px 20px;
-  text-decoration: none;
-}
-
-input[type=button]:hover {
-  text-decoration: none;
+  box-shadow: 0px 1px 3px #666666;*/
+  padding: 3px 10px 6px 10px;
 }
