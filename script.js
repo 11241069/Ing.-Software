@@ -8,7 +8,7 @@
 //variables para hacer actualizaciones relevantes
 var tTrans = 0;
 var tTot = 0;
-var calcularId = 0;
+var calcularId;
 var tempAct = 0.0;
 var tempIni = 0.0;
 var tempFin = 0.0;
@@ -27,6 +27,8 @@ var saleAgua = false;
 var stop = false;
 
 var heat = function () {
+                document.getElementById('btnCalcular').disabled = true;
+                document.getElementById('btnReCalcular').disabled = false;
                 // es más fácil recalcular estos cuando se cambian
                 var volumen = document.getElementById('volumen');//volumen por calentar
                 var energia = document.getElementById('energia');//energía del calentador en cuestión
@@ -95,7 +97,7 @@ var heat = function () {
                 }else{//hay que modificar esto después, el calentador también pude enfriar según especificaciones del ing.
 					//startTemp.value = 40;
                     //endTemp.value = 100;
-					estado(2);
+                    estado(2);
                     //alert('Temperatura inicial no puede ser mayor que Temperatura final');					
 				}
                 
@@ -113,6 +115,7 @@ function calculate(){
 	updateTiempo();
 	updateTemperatura();
 	updateEstado();
+	
 }
 
 function detener(){
@@ -122,6 +125,16 @@ function detener(){
 	document.getElementById('temperaturaActual').innerHTML = tempAct;
 	document.getElementById('tiempoTranscurrido').innerHTML = tTrans;
 	document.getElementById('estado').innerHTML = "";
+	document.getElementById('btnCalcular').disabled = false;
+	document.getElementById('btnReCalcular').disabled = true;
+}
+function guardar() {
+
+}
+function recalcular(){
+    clearInterval(calcularId);
+    document.getElementById('startTemp').value = tempAct;
+    heat();
 }
 
 function updateTiempo(){
@@ -146,9 +159,11 @@ function updateTemperatura(){
 			//var temp = Math.abs(tempFin-tempIni)*1.0/(tTot);
 			//(tempAct) = (tempAct*1 - temp);
 			estado(3);
-			if(volumenActual<=volumenMax-tasaEntrada){
-				(tempAct) -= ((volumenActual*tempAct)+(volumenActual+tasaEntrada*tempEntra))/(volumenActual+(volumenActual+tasaEntrada));
-				(volumenActual) = (volumenActual*1 + tasaEntrada*1);
+			if (volumenActual <= volumenMax - tasaEntrada) {
+			    
+			    (tempAct) -= ((volumenActual * 0.264 * tempAct * 1.8 + 32) + (volumenActual * 0.264 + tasaEntrada * tempEntra * 1.8 + 32)) / (volumenActual * 0.264 + (volumenActual * 0.264 + tasaEntrada));
+				(volumenActual) = (volumenActual * 1 + tasaEntrada * 1);
+                
 			}else{
 				estado(4);
 				(volumenActual) = (volumenActual*1 - tasaSalida*1);
@@ -179,7 +194,8 @@ function estado(state){//también conocido como peaceful mongoose, o el megaviso
         saleAgua = true;
         break;
 	case (666):
-		stop = true;
+	    stop = true;
+	    break;
 	case (-1):
         calentando = false;
         break;

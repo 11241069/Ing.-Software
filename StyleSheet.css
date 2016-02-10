@@ -3,8 +3,10 @@
     src: url(Mate-Regular.ttf);
 }
 body {
+    
     background:#fbfbfb;
     margin:0;
+    
     /*font-family:Simple;*/
 }
 * {
@@ -23,6 +25,8 @@ h1{
 }
 .container{
     position: relative;
+    align-content: center;
+    text-align: center;
     z-index: 2;
     margin: 0 auto;
     margin-top: 20px;

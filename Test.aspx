@@ -1,4 +1,4 @@
-<%--Directiva--%>
+﻿<%--Directiva--%>
 <%@ Page Language="C#" %>
 <%--Codigo en linea--%>
   
@@ -127,6 +127,8 @@ protected void Page_Load(object sender, EventArgs e)
             <div class="input-container">
                 <input type = "button" id="btnCalcular" value="Calcular" onclick="heat();" />
 			    <input type = "button" id="btnDetener" value="Detener" onclick="detener();" />
+                <input type = "button" id="btnReCalcular" value="ReCalcular" onclick="recalcular();" disabled/>
+                <input type = "button" id="btnGuardar" value="Guardar" onclick="guardar();" />
             </div>			
             <table>
 				<tr>
